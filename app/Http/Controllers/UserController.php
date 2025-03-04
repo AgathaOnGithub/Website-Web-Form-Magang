@@ -49,4 +49,17 @@ class UserController extends Controller
 
         return redirect()->route('profile.view', $user->id)->with('success', 'Profil berhasil diperbarui.');
     }
+
+    public function uploadDocument(Request $request)
+    {
+        $request->validate([
+            'cv' => 'required|mimes:pdf,doc,docx|max:2048',
+            'formulir' => 'required|mimes:pdf,doc,docx|max:2048',
+        ]);
+
+        $cvPath = $request->file('cv')->store('uploads/cv', 'public');
+        $formulirPath = $request->file('formulir')->store('uploads/formulir', 'public');
+
+        return back()->with('success', 'Dokumen berhasil diunggah!');
+    }
 }
