@@ -4,7 +4,7 @@ Sistem ini digunakan untuk mengelola pendaftaran magang, upload dokumen, serta m
 
 ## 🚀 Status Proyek
 
-- 🔄 **Versi:** 1.0.0  
+- 🔄 **Versi:** 10.0.0  
 - 🛠 **Development Status:** Sedang dikembangkan  
 - 📅 **Update Terakhir:** Maret 2025  
 - ⚖ **Lisensi:** MIT  
