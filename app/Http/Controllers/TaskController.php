@@ -23,32 +23,37 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'file' => 'required|file|mimes:pdf,doc,docx,png,jpg,jpeg,rar,xlsx|max:2048'
+            'file' => 'required|file|max:2048',
+            'deadline' => 'required|date',
         ]);
 
-        $filePath = $request->file('file')->store('tasks', 'public');
+        if ($request->hasFile('file')) {
+            $filePath = $request->file('file')->store('uploads', 'public'); // Simpan ke storage/public/uploads
+            
+            Task::create([
+                'title' => 'Nama File',
+                'description' => 'Deskripsi file',
+                'file' => $filePath,
+                'user_id' => auth()->id(),
+                'deadline' => $request->deadline,
+                'status' => 'pending', // Tambahkan nilai default
+            ]);
+        }
 
-        Task::create([
-            'user_id' => Auth::id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'file_path' => $filePath,
-            'status' => 'submitted'
-        ]);
-
-        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil dikirim.');
+        return redirect()->back()->with('success', 'File berhasil diupload!');
     }
 
-    public function show(Task $task)
+    public function destroy($id)
     {
-        return view('tasks.show', compact('task'));
-    }
+        $task = Task::findOrFail($id);
 
-    public function review(Task $task)
-    {
-        $task->update(['status' => 'reviewed']);
-        return redirect()->back()->with('success', 'Tugas telah diperiksa.');
+        // Hapus file dari storage jika ada
+        if ($task->file) {
+            Storage::disk('public')->delete($task->file);
+        }
+
+        $task->delete();
+
+        return redirect()->back()->with('success', 'Tugas berhasil dihapus!');
     }
 }
