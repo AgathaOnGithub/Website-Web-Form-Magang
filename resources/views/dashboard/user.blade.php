@@ -5,39 +5,13 @@
     <h1 class="text-center text-primary fw-bold">User Dashboard</h1>
     <p class="text-center">Selamat datang, {{ Auth::user()->name }}!</p>
 
-    <!-- Section Program Magang -->
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title fw-bold">Program Magang</h4>
-                    <p class="card-text">
-                        Adalah strategi pemasaran yang menggunakan media digital untuk mempromosikan produk atau layanan. Digital marketing juga dikenal sebagai online marketing.
-                    </p>
-                    <a href="#" class="btn btn-primary">Lihat Detail</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h4 class="card-title fw-bold">Digital Marketing</h4>
-                    <p class="card-text">
-                        Adalah kegiatan pemasaran yang dilakukan secara online dengan teknologi digital. Tujuannya untuk meningkatkan promosi dan penjualan.
-                    </p>
-                    <a href="#" class="btn btn-primary">Lihat Detail</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Section Status Pendaftaran -->
-    <div class="mt-5">
+    <!-- Status Pendaftaran -->
+    <div class="mt-4">
         <h3 class="fw-bold">Status Pendaftaran</h3>
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <table class="table table-bordered">
-                    <thead class="table-dark">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-dark text-center">
                         <tr>
                             <th>Program Magang</th>
                             <th>Status</th>
@@ -46,7 +20,7 @@
                     <tbody>
                         <tr>
                             <td>Digital Marketing</td>
-                            <td><span class="badge bg-success">Diterima</span></td>
+                            <td class="text-center"><span class="badge bg-success">Diterima</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -54,11 +28,31 @@
         </div>
     </div>
 
-    <!-- Tombol Menuju Halaman Tugas -->
-    <div class="text-center mt-4">
-        <a href="{{ route('tasks.index') }}" class="btn btn-lg btn-warning fw-bold">
+    <!-- Upload Dokumen & Tombol Lihat Tugas -->
+<div class="mt-5 mb-5"> <!-- Tambahkan mb-5 di sini -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3 class="fw-bold mb-0">Upload Dokumen</h3>
+        <a href="{{ route('tasks.index') }}" class="btn btn-lg btn-warning fw-bold d-flex align-items-center">
             📋 Lihat Tugas
         </a>
+    </div>
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <form action="{{ route('user.uploadDocument') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="mb-3">
+                    <label for="cv" class="form-label fw-bold">Upload CV (PDF/DOCX)</label>
+                    <input type="file" class="form-control" name="cv" id="cv" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="mb-3">
+                    <label for="formulir" class="form-label fw-bold">Upload Formulir (PDF/DOCX)</label>
+                    <input type="file" class="form-control" name="formulir" id="formulir" accept=".pdf,.doc,.docx" required>
+                </div>
+                <div class="text-end">
+                    <button type="submit" class="btn btn-success fw-bold px-4">Upload</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
