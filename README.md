@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://www.telkom.co.id" target="_blank">
-    <img src="https://id.wikipedia.org/wiki/Telkom_Indonesia#/media/Berkas:Telkom_Indonesia_2013.svg" width="300" alt="Telkom Indonesia Logo">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/67/Telkom_Indonesia_2013.svg" width="300" alt="Telkom Indonesia Logo">
   </a>
 </p>
 
