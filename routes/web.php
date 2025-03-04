@@ -60,6 +60,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('profile')->group(function () {
         Route::get('/{id}', [UserController::class, 'showProfile'])->name('profile.view');
         Route::put('/{id}/update', [UserController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/user/upload-document', [UserController::class, 'uploadDocument'])->name('user.uploadDocument');
     });
 
     // Routes khusus admin
