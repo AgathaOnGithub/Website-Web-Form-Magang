@@ -14,7 +14,9 @@ class TaskSeeder extends Seeder
             'description' => 'Submit final internship report.',
             'deadline' => now()->addWeeks(1),
             'status' => 'pending',
-            'user_id' => 1
+            'user_id' => 1,
+            'file' => 'default.pdf' // Masukkan file default
         ]);
     }
 }
+
