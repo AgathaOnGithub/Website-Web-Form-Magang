@@ -2,80 +2,61 @@
 
 @section('content')
 <div class="container mt-4">
-    <h1 class="mb-4 text-center">📂 Daftar Tugas</h1>
+    <h2 class="text-center mb-4"><i class="fas fa-folder-open"></i> Daftar Tugas</h2>
 
-    <!-- Tombol Upload Tugas -->
-    <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#uploadTaskModal">
-        ➕ Upload Tugas
-    </button>
+    <!-- Tombol Upload -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="{{ route('tasks.create') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Upload Tugas
+        </a>
+    </div>
 
-    <!-- Tabel Daftar Tugas -->
+    <!-- Tabel Tugas -->
     <div class="card shadow-sm">
-        <div class="card-header bg-secondary text-white">
-            <h4 class="mb-0">Tugas yang Telah Diupload</h4>
+        <div class="card-header bg-dark text-white">
+            <h5 class="mb-0 text-center">Tugas yang Telah Diupload</h5>
         </div>
         <div class="card-body">
-            <table class="table table-striped">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Judul</th>
-                        <th>Deskripsi</th>
-                        <th>File</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($tasks as $task)
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle">
+                    <thead class="table-dark">
                         <tr>
-                            <td>{{ $task->name }}</td>
+                            <th style="width: 25%;">Judul</th>
+                            <th style="width: 35%;">Deskripsi</th>
+                            <th style="width: 15%;">File</th>
+                            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'pembimbing' || Auth::user()->role == 'user')
+                            <th style="width: 25%;">Aksi</th>
+                            @endif
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($tasks as $task)
+                        <tr>
+                            <td>{{ $task->title }}</td>
                             <td>{{ $task->description }}</td>
                             <td>
-                                <a href="{{ asset('storage/tasks/' . $task->file) }}" target="_blank" class="btn btn-sm btn-info">
-                                    📄 Lihat File
+                                <a href="{{ asset('storage/' . $task->file_path) }}" class="btn btn-info btn-sm" target="_blank">
+                                    <i class="fas fa-file-alt"></i> Lihat File
                                 </a>
                             </td>
+                            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'pembimbing' || Auth::user()->role == 'user')
                             <td>
-                                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST">
+                                <a href="{{ route('tasks.edit', $task->id) }}" class="btn btn-warning btn-sm me-1">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <form action="{{ route('tasks.destroy', $task->id) }}" method="POST" onsubmit="return confirm('Yakin ingin menghapus tugas ini?');" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        ❌ Hapus
+                                        <i class="fas fa-trash"></i> Hapus
                                     </button>
                                 </form>
                             </td>
+                            @endif
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Upload Tugas -->
-<div class="modal fade" id="uploadTaskModal" tabindex="-1" aria-labelledby="uploadTaskModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="uploadTaskModalLabel">Upload Tugas</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('tasks.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Judul Tugas</label>
-                        <input type="text" class="form-control" id="name" name="name" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Deskripsi</label>
-                        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Upload File (PDF, Word, Gambar)</label>
-                        <input type="file" class="form-control" id="file" name="file" accept=".pdf,.doc,.docx,.jpg,.png" required>
-                    </div>
-                    <button type="submit" class="btn btn-success">📤 Unggah</button>
-                </form>
+                        @endforeach
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
