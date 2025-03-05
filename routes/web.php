@@ -8,6 +8,7 @@ use App\Http\Controllers\PembimbingController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\InternshipController;
+use App\Http\Controllers\UploadController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
@@ -85,6 +86,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
         Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
         Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
-
     });
+        Route::post('/uploads/store', [UploadController::class, 'store'])->name('uploads.store');
 });
