@@ -58,9 +58,9 @@ Route::middleware('auth')->group(function () {
 
     // Profile - Bisa diakses semua user yang login
     Route::prefix('profile')->group(function () {
-        Route::get('/{id}', [UserController::class, 'showProfile'])->name('profile.view');
+        Route::get('/{id}', [UserController::class, 'profile'])->name('profile.view');
         Route::put('/{id}/update', [UserController::class, 'updateProfile'])->name('profile.update');
-        Route::post('/user/upload-document', [UserController::class, 'uploadDocument'])->name('user.uploadDocument');
+        Route::post('/upload-dokumen', [UserController::class, 'uploadDokumen'])->name('upload.dokumen');
     });
 
     // Routes khusus admin
@@ -83,5 +83,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
         Route::put('/tasks/{task}/review', [TaskController::class, 'review'])->name('tasks.review');
         Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+        Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+        Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+
     });
 });
