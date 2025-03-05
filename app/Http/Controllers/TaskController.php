@@ -23,24 +23,54 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => 'required|file|max:2048',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
             'deadline' => 'required|date',
+            'status' => 'required|in:pending,in_progress,completed',
+            'file' => 'required|mimes:pdf,docx,jpg,png|max:2048', // Maksimal 2MB
         ]);
 
+        $filePath = $request->file('file')->store('uploads', 'public');
+
+        // Buat URL file yang disimpan
+        $url = asset('storage/' . $filePath);
+
+        Task::create([
+            'title' => $request->title,
+            'description' => $request->description,
+            'deadline' => $request->deadline,
+            'status' => $request->status,
+            'file_path' => $filePath, // Simpan path file
+            'user_id' => Auth::id(),
+        ]);
+
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil ditambahkan! File dapat diakses di: ' . $url);
+    }
+
+    public function edit(Task $task)
+    {
+        return view('tasks.edit', compact('task'));
+    }
+
+    public function update(Request $request, Task $task)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'file' => 'nullable|mimes:pdf,doc,docx,png,jpg,jpeg|max:2048'
+        ]);
+
+        $task->title = $request->title;
+        $task->description = $request->description;
+
         if ($request->hasFile('file')) {
-            $filePath = $request->file('file')->store('uploads', 'public'); // Simpan ke storage/public/uploads
-            
-            Task::create([
-                'title' => 'Nama File',
-                'description' => 'Deskripsi file',
-                'file' => $filePath,
-                'user_id' => auth()->id(),
-                'deadline' => $request->deadline,
-                'status' => 'pending', // Tambahkan nilai default
-            ]);
+            $filePath = $request->file('file')->store('tasks', 'public');
+            $task->file_path = $filePath;
         }
 
-        return redirect()->back()->with('success', 'File berhasil diupload!');
+        $task->save();
+
+        return redirect()->route('tasks.index')->with('success', 'Tugas berhasil diperbarui!');
     }
 
     public function destroy($id)
@@ -48,8 +78,8 @@ class TaskController extends Controller
         $task = Task::findOrFail($id);
 
         // Hapus file dari storage jika ada
-        if ($task->file) {
-            Storage::disk('public')->delete($task->file);
+        if ($task->file_path) {
+            Storage::disk('public')->delete($task->file_path);
         }
 
         $task->delete();
