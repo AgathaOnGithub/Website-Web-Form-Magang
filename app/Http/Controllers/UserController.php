@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Internship;
 use App\Models\Application;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+
 
 class UserController extends Controller
 {
@@ -50,16 +52,21 @@ class UserController extends Controller
         return redirect()->route('profile.view', $user->id)->with('success', 'Profil berhasil diperbarui.');
     }
 
-    public function uploadDocument(Request $request)
+    public function uploadDokumen(Request $request)
     {
         $request->validate([
             'cv' => 'required|mimes:pdf,doc,docx|max:2048',
             'formulir' => 'required|mimes:pdf,doc,docx|max:2048',
         ]);
 
-        $cvPath = $request->file('cv')->store('uploads/cv', 'public');
-        $formulirPath = $request->file('formulir')->store('uploads/formulir', 'public');
+        $cvPath = $request->file('cv')->store('dokumen', 'public');
+        $formulirPath = $request->file('formulir')->store('dokumen', 'public');
 
-        return back()->with('success', 'Dokumen berhasil diunggah!');
+        auth()->user()->update([
+            'cv' => $cvPath,
+            'formulir' => $formulirPath,
+        ]);
+
+        return redirect()->back()->with('success', 'Dokumen berhasil diunggah.');
     }
 }
